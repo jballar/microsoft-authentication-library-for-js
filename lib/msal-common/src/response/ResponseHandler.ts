@@ -135,6 +135,23 @@ export class ResponseHandler {
             }
         }
 
+        /*
+         * GBL: TBR
+         * Workaround to compute the correct Home Account Id
+         * This allows the token cache to function properly when using ADFS
+         */
+
+        if (!this.homeAccountIdentifier) {
+            this.logger.info("(GBL)ResponseHandler::handleServerTokenResponse: Home Account Id is missing - Trying using sub claim");
+            if (Boolean(idTokenObj) && Boolean(idTokenObj.claims) && Boolean(idTokenObj.claims.sub)) {
+                const tokenSub = idTokenObj.claims.sub;
+                this.logger.info(`\thomeAccountIdentifier = sub = ${tokenSub}`);
+                this.homeAccountIdentifier = tokenSub;
+            } else {
+                this.logger.info("(GBL)ResponseHandler::handleServerTokenResponse: sub claim is missing. Home Account Id is still invalid!!!");
+            }
+        }
+
         // save the response tokens
         let requestStateObj: RequestStateObject = null;
         if (!StringUtils.isEmpty(cachedState)) {

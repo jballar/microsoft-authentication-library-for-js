@@ -193,6 +193,16 @@ export class AccountEntity {
 
         account.environment = env;
         account.username = idToken.claims.upn;
+
+        /*
+         * GBL: TBR
+         * Workaround to compute the correct Local Account Id
+         * This allows the token cache to function properly when using ADFS
+         */
+
+        account.localAccountId = idToken.claims.sid;
+        window.console.info(`(GBL)AccountEntity::createGenericAccount: localAccountId = sid = ${account.localAccountId}`);
+
         /*
          * add uniqueName to claims
          * account.name = idToken.claims.uniqueName;

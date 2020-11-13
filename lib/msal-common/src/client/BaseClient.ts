@@ -75,14 +75,27 @@ export abstract class BaseClient {
      * Creates default headers for requests to token endpoint
      */
     protected createDefaultTokenRequestHeaders(): Record<string, string> {
-        const headers = this.createDefaultLibraryHeaders();
-        headers[HeaderNames.CONTENT_TYPE] = Constants.URL_FORM_CONTENT_TYPE;
-        headers[HeaderNames.X_MS_LIB_CAPABILITY] = HeaderNames.X_MS_LIB_CAPABILITY_VALUE;
+        /*
+         * GBL: TBR
+         * Workaround to remove most of the headers in the request
+         * This allows for proper operation when using the ADFS Proxy.     * const headers = this.createDefaultLibraryHeaders();
+         */
 
-        if (this.serverTelemetryManager) {
-            headers[HeaderNames.X_CLIENT_CURR_TELEM] = this.serverTelemetryManager.generateCurrentRequestHeaderValue();
-            headers[HeaderNames.X_CLIENT_LAST_TELEM] = this.serverTelemetryManager.generateLastRequestHeaderValue();
-        }
+        const headers : Record<string, string> = {};
+
+        this.logger.info("(GBL)BaseClient::createDefaultTokenRequestHeaders: removed headers -> No preflight (ADFS Proxy workaround)");
+
+        headers[HeaderNames.CONTENT_TYPE] = Constants.URL_FORM_CONTENT_TYPE;
+
+        /*
+         * GBL: TBR
+         * Continue ADFS Proxy workaround
+         * headers[HeaderNames.X_MS_LIB_CAPABILITY] = HeaderNames.X_MS_LIB_CAPABILITY_VALUE;
+         * if (this.serverTelemetryManager) {
+         *    headers[HeaderNames.X_CLIENT_CURR_TELEM] = this.serverTelemetryManager.generateCurrentRequestHeaderValue();
+         *    headers[HeaderNames.X_CLIENT_LAST_TELEM] = this.serverTelemetryManager.generateLastRequestHeaderValue();
+         * }
+         */
 
         return headers;
     }

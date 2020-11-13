@@ -44,3 +44,11 @@ export {
     // Protocol Mode
     ProtocolMode
 } from "@azure/msal-common";
+
+/*
+ * GBL: TBR
+ * Additional exports to improve PhoneBar diagnostic
+ */
+
+export { StringUtils } from "@azure/msal-common";
+export { Base64Decode } from "./encode/Base64Decode";
